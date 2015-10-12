@@ -32,10 +32,69 @@ brew update
 brew cask install iTerm2
 ```
 ### 启动iTerm2，从顶上的配置中设置颜色和字体
+
 在 Keys -> Hotkey 中设置 command + option + i 快速显示和隐藏 iTerm
+
 在 Profiles -> Default -> Check silence bell
+
 下载 Solarized
 ```shell
 $ git clone git://github.com/altercation/solarized.git
 ```
+
 在 Profiles -> Default -> Colors -> Load Presets 将iterm2-colors-solarized里的两个文件导入，并选Solarized Dark作为默认颜色。
+
+### 把 zsh 设置成默认的 shell
+```shell
+chsh -s /bin/zsh
+```
+输入密码，重新打开一个shell窗口，这时已经不是bash了
+
+### 安装 oh-my-zsh
+```shell
+git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+```
+### 备份zsh的配置，并用oh-my-zsh的模板创建一个新的配置
+```shell
+cp ~/.zshrc ~/.zshrc.orig
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+```
+### 往 ~/.zshrc 里追加下面的内容
+
+```shell
+if [ -x /usr/bin/dircolors ]; then
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+    alias tree='tree -C'
+fi
+
+alias ..="cd .."
+alias ..2="cd ../.."
+alias ..3="cd ../../.."
+alias ..4="cd ../../../.."
+alias ..5="cd ../../../../.."
+alias  "l"="ls -ahl --full-time"
+
+#这一段是为了解决mac的ls命令没有颜色区分的问题
+if brew list | grep coreutils > /dev/null ; then
+  PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+  alias ls='ls -F --show-control-chars --color=auto'
+  eval `gdircolors -b $HOME/.dir_colors`
+fi
+```
+
+重新打开一个shell窗口执行ls现在已经有颜色了
+
+
+
+
+
+
+
+
+
+
