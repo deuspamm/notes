@@ -96,7 +96,8 @@ fi
 
 重新打开一个shell窗口执行ls现在已经有颜色了
 
-
+### 关于没有显示光标前的箭头问题是字体的问题,可以去这里下载
+[下载](https://github.com/mneorr/powerline-fonts/blob/bfcb152306902c09b62be6e4a5eec7763e46d62d/Monaco/Monaco%20for%20Powerline.otf)
 
 
 
