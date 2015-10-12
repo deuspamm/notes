@@ -96,8 +96,8 @@ fi
 
 重新打开一个shell窗口执行ls现在已经有颜色了
 
-### 关于没有显示光标前的箭头问题是字体的问题,可以去这里下载
-[下载](https://github.com/mneorr/powerline-fonts/blob/bfcb152306902c09b62be6e4a5eec7763e46d62d/Monaco/Monaco%20for%20Powerline.otf)
+### 关于没有显示光标前的箭头问题是字体的问题,可以去这里[下载](https://github.com/mneorr/powerline-fonts/blob/bfcb152306902c09b62be6e4a5eec7763e46d62d/Monaco/Monaco%20for%20Powerline.otf)然后根据下图设置
+![~/.oh-my-zsh的模板内容](https://github.com/lenxeon/notes/blob/master/%E8%BF%90%E7%BB%B4/201510/iterm2%20%E5%92%8Coh%20my%20zsh%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/iterm2%E5%AD%97%E4%BD%93%E8%AE%BE%E7%BD%AE.png)
 
 
 
