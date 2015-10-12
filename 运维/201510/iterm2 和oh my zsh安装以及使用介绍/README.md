@@ -66,7 +66,7 @@ cat ~/.zshrc | grep -v '#'  |  grep -v '^$'
 
 ![~/.oh-my-zsh的模板内容](https://github.com/lenxeon/notes/blob/master/%E8%BF%90%E7%BB%B4/201510/iterm2%20%E5%92%8Coh%20my%20zsh%E5%AE%89%E8%A3%85%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/o-my-zsh%E9%BB%98%E8%AE%A4%E6%A8%A1%E6%9D%BF.png)
 
-### 往 ~/.zshrc 里追加下面的内容
+### 在 ~/.zshrc 修改主题为ZSH_THEME="agnoster"，并追加下面的内容
 
 ```shell
 if [ -x /usr/bin/dircolors ]; then
