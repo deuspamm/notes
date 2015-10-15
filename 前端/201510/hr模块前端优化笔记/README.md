@@ -29,6 +29,7 @@ lib.css hr.css 和 lib.js hr.js
 * 对所有的引用添加文件hash用于资源的缓存及更新
 
 #规划构想
+## 开发结构
 在开始之前我先进行了一些规划构想，假设今后的项目分为几个子项目独立管理，有通用ui框架，mod模块化框架，mod-*各类业务模块其中各类业务模块只有一个首页面，为单页面应用，目录结构如下
 ```shell
 ├── common-ui
@@ -62,4 +63,61 @@ lib.css hr.css 和 lib.js hr.js
     ├── less
     ├── lib
     └── template
+```
+
+## 发布结构
+目录发布结构主要涉及了三个方面
+*static目录：静态资源的存放，这部分资源将来可能会部署到静态资源服务器上，我们经常能看到一些网站的js域名为static.*
+*map目录：map目录里主要存放的是该项目的资源依懒关系分析结果
+*proj目录：这个目录主要是项目的入口
+另外，整个项目是支持版本发布的
+
+```
+├── map
+│   ├── common-ui
+│   │   └── 1.0.1.json
+│   ├── mod-admin
+│   │   └── 1.0.1.json
+│   ├── mod-crm
+│   │   └── 1.0.1.json
+│   └── mod-hr
+│       └── 1.0.1.json
+├── proj
+│   ├── common-ui
+│   │   └── 1.0.1
+│   │       ├── index.html
+│   │       └── lib
+│   ├── mod-admin
+│   │   └── 1.0.1
+│   │       ├── index.html
+│   │       └── lib
+│   ├── mod-crm
+│   │   └── 1.0.1
+│   │       ├── index.html
+│   │       └── lib
+│   └── mod-hr
+│       └── 1.0.1
+│           ├── index.html
+│           └── lib
+└── static
+    ├── common-ui
+    │   └── 1.0.1
+    │       ├── js
+    │       ├── less
+    │       └── pic
+    ├── mod-admin
+    │   └── 1.0.1
+    │       ├── js
+    │       ├── less
+    │       └── pic
+    ├── mod-crm
+    │   └── 1.0.1
+    │       ├── js
+    │       ├── less
+    │       └── pic
+    └── mod-hr
+        └── 1.0.1
+            ├── js
+            ├── less
+            └── pic
 ```
