@@ -27,3 +27,38 @@
 lib.css hr.css 和 lib.js hr.js
 * 开发中的相对路径替换为绝对路径
 * 对所有的引用添加文件hash用于资源的缓存及更新
+
+#在开始之前我先进行了一些规划构想，假设今后的项目分为几个子项目独立管理，有通用ui框架，mod模块化框架，mod-*各类业务模块其中各类业务模块只有一个首页面，为单页面应用，目录结构如下
+```
+├── common-ui
+│   ├── images
+│   ├── index.html
+│   ├── js
+│   ├── less
+│   ├── lib
+│   ├── template
+│   └── widget
+├── lib
+│   └── mod
+├── mod-admin
+│   ├── images
+│   ├── index.html
+│   ├── js
+│   ├── less
+│   ├── lib
+│   └── template
+├── mod-crm
+│   ├── images
+│   ├── index.html
+│   ├── js
+│   ├── less
+│   ├── lib
+│   └── template
+└── mod-hr
+    ├── images
+    ├── index.html
+    ├── js
+    ├── less
+    ├── lib
+    └── template
+```
