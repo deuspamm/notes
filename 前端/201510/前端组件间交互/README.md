@@ -11,3 +11,38 @@
 1. 上方保存或者修改后下方的数据需要同步更新。
 1. 选中下方某一条的时候，上方需要显示该条数据的内容。
 
+假定我们定义这个页面有两个组件 form list
+
+```
+var form = {
+    init: function(){
+
+    },
+    render: function(){
+
+    },
+    saveHandler: function(){
+
+    },
+    updateHandler: function(){
+
+    },
+}
+
+var list = {
+    init: function(){
+
+    },
+    render: function(){
+
+    },
+    refreshHandler: function(){
+
+    },
+    deleteHandler: function(){
+
+    }
+}
+
+```
+
