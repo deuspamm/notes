@@ -14,35 +14,155 @@
 假定我们定义这个页面有两个组件 form list
 
 ```
-var form = {
-    init: function(){
+var form = function(){
+    init: function() {
 
     },
-    render: function(){
+    render: function(data) {
 
     },
-    saveHandler: function(){
+    saveHandler: function() {
 
     },
-    updateHandler: function(){
+    updateHandler: function() {
 
     },
 }
 
-var list = {
-    init: function(){
+var list = function() {
+    init: function() {
 
     },
-    render: function(){
+    render: function() {
 
     },
-    refreshHandler: function(){
+    seelectHandler: function() {
 
     },
-    deleteHandler: function(){
+    refreshHandler: function() {
+
+    },
+    deleteHandler: function() {
 
     }
 }
 
 ```
+
+##目前的可实现的方案中，大概有三种。
+*最差的一种，直接在组件内处理：
+
+
+```
+var form  = function() {
+    init: function() {
+
+    },
+    render: function() {
+
+    },
+    saveHandler: function() {
+        //ajax
+        list.refreshHandler();
+    },
+    updateHandler: function() {
+        //ajax
+        list.refreshHandler();
+    },
+}
+
+var list  = function() {
+    init: function() {
+
+    },
+    render: function(data) {
+
+    },
+    seelectHandler: function() {
+        var data = ...
+        form.render(data);
+    },
+    refreshHandler: function() {
+
+    },
+    deleteHandler: function() {
+
+    }
+}
+
+```
+这个方案破坏了组件自身的封闭性，当一个组件同时被多个组件使用，且不在一个页面时，这种方式已经不适用了。
+
+
+*中等可接受的一种，预留事件处理入口：
+
+
+```
+var form  = function() {
+    init: function() {
+
+    },
+    render: function() {
+
+    },
+    saveHandler: function() {
+        //ajax
+        if(this.afterSavehandler){
+            this.afterSavehandler()
+        }
+    },
+    updateHandler: function() {
+        //ajax
+        if(this.afterUpdatehandler){
+            this.afterUpdatehandler()
+        }
+    },
+}
+
+var list  = function() {
+    init: function() {
+
+    },
+    render: function(data) {
+
+    },
+    seelectHandler: function() {
+        var data = ...
+        if(this.afterSelecthandler){
+            this.afterSelecthandler(data)
+        }
+    },
+    refreshHandler: function() {
+
+    },
+    deleteHandler: function() {
+
+    }
+}
+
+使用时：
+var formIns, listIns;
+
+var afterSavehandler = function(){
+    listIns.refreshHandler();
+}
+
+var afterUpdatehandler = function(){
+    listIns.refreshHandler();
+}
+
+var afterSelecthandler = function(data){
+    formIns.render(data);
+}
+
+formIns = new form({
+    afterSavehandler: afterSavehandler,
+    afterUpdatehandler: afterUpdatehandler,
+});
+
+listIns = new list({
+    afterSelecthandler: afterSelecthandler,
+})
+```
+这个方案相对于第一个方案，不存在强侵入性，组件自身的事件处理前后可以预留处理函数入口，使用组件时根据业务的需求进行定义。
 
