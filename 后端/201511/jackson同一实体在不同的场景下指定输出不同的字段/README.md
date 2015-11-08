@@ -223,7 +223,8 @@ public class BaseBean implements Serializable, Cloneable {
 JsonView的方案和MixIn类似，也需要实现不同的接口。
 这两种方案都需要额外的实现接口，这都不是想要的结果，我们不希望过多的实现额外的代码。
 
-大致的想法：
+大致的思路：
+
 1. 在bean上添加jsonFilter注解。
 2. 在controller上对这个controller方法添加注解，对这个方法返回值中涉及到的所有的类进行相应的字段配置，指定输出字段。
 3. 利用aop对这些controller方法进行拦截，解析方法上的过滤字段，利用：SimpleFilterProvider进行过滤。
