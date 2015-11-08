@@ -480,11 +480,15 @@ public class MObjectMapper extends ObjectMapper {
 
 ##使用示例及测试
 
+配置
+
 ![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/jackson同一实体在不同的场景下指定输出不同的字段/配置.png)
 
+配置前
 
 ![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/jackson同一实体在不同的场景下指定输出不同的字段/测试结果-配置前.png)
 
+配置后
 
 ![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/jackson同一实体在不同的场景下指定输出不同的字段/测试结果-配置后.png)
 
