@@ -259,6 +259,7 @@ public @interface MJsonFilters {
 
 ```
 
+User实体上添加注解
 ```java
 package com.lenxeon.apps.user.pojo;
 
