@@ -229,6 +229,36 @@ JsonView的方案和MixIn类似，也需要实现不同的接口。
 2. 在controller上对这个controller方法添加注解，对这个方法返回值中涉及到的所有的类进行相应的字段配置，指定输出字段。
 3. 利用aop对这些controller方法进行拦截，解析方法上的过滤字段，利用：SimpleFilterProvider进行过滤。
 
+自定义的annotion
+
+```java
+package com.lenxeon.apps.plat.annotion;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MJsonFilter {
+    Class<?> target();
+
+    String[] fields();
+}
+
+```
+
+```java
+package com.lenxeon.apps.plat.annotion;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MJsonFilters {
+    MJsonFilter[] value();
+}
+
+```
+
 ```java
 package com.lenxeon.apps.user.pojo;
 
