@@ -326,7 +326,6 @@ aop拦截
 package com.lenxeon.apps.plat.json;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.lenxeon.apps.plat.annotion.MJsonFilter;
@@ -339,7 +338,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -369,22 +367,25 @@ public class MJsonFilterAspect {
         }
         filters.add(annotation);
         MObjectMapper objectMapper = new MObjectMapper();
+        SimpleFilterProvider provider = new SimpleFilterProvider();
+        provider.setFailOnUnknownId(false);
         for (MJsonFilter mf : filters) {
             if (mf != null && mf.target() != null
                     && mf.fields() != null && mf.fields().length > 0) {
                 Class<?> clazz = mf.target();
-
                 Set<String> filedNames = new HashSet<>();
-                MObjectMapper.getFields(clazz, filedNames);
-                Set<String> filterNames = new HashSet<>();
-                filterNames.addAll(Arrays.asList(mf.fields()));
-                filedNames.removeAll(filterNames);
+                //本来意思是过滤掉这些字段，反转后表示只显示这些字段
+                if (mf.reverse()) {
+                    //获取类上面的所有可能显示的字段
+                    MObjectMapper.getFields(clazz, filedNames);
+                    Set<String> filterNames = new HashSet<>();
+                    filterNames.addAll(Arrays.asList(mf.fields()));
+                    filedNames.removeAll(filterNames);
+                } else {
+                    filedNames.addAll(Arrays.asList(mf.fields()));
+                }
                 JsonFilter jsonFilter = clazz.getAnnotation(JsonFilter.class);
                 if (jsonFilter != null) {
-                    System.out.println("==============================jsonFilter==================================="
-                            + jsonFilter.value() + "\t" + Arrays.toString(filedNames.toArray()));
-                    SimpleFilterProvider provider = new SimpleFilterProvider();
-                    provider.setFailOnUnknownId(false);
                     provider.addFilter(jsonFilter.value(), SimpleBeanPropertyFilter.serializeAllExcept(filedNames));
                     objectMapper.setFilters(provider);
                 }
