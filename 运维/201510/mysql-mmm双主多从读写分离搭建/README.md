@@ -154,8 +154,11 @@ SHOW MASTER STATUS;
 ### scp刚才的备份到其它四台机器
 
 > scp /etc/my.cnf hadoop02:/etc
+
 > scp /etc/my.cnf hadoop03:/etc
+
 > scp /etc/my.cnf hadoop04:/etc
+
 > scp /etc/my.cnf hadoop05:/etc
 
 ### 在hadoop02-05上导入数据库，并开启slave进程
