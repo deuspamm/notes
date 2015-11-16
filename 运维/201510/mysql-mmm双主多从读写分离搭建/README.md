@@ -141,7 +141,7 @@ SHOW MASTER STATUS;
 ```
 大概会看到类似下面的结果，核心的是日志文件名称和偏移位置：mysql-bin.000001，781
 
-![ls 当前主数据库状态](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/当前主数据库状态.png)
+![ls 当前主数据库状态](https://github.com/lenxeon/notes/blob/master/运维/201510/mysql-mmm双主多从读写分离搭建/当前主数据库状态.png)
 
 ### 备份数据库
 先不要结束这个shell,再开一个新shell ssh到hadoop01，准备备份mysql
@@ -170,7 +170,7 @@ start slave;
 show slave status\G
 ```
 
-![ls 从数据库状态](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/从数据库状态.png)
+![ls 从数据库状态](https://github.com/lenxeon/notes/blob/master/运维/201510/mysql-mmm双主多从读写分离搭建/从数据库状态.png)
 
 ### 经过上面这一段操作，hadoop02-05可以从hadoop01同步数据了，接下来设置双master,让hadoop01以hadoop02为主库
 在hadoop02上
@@ -298,10 +298,10 @@ debug 0 #是否开启日志 0不开启 1开启
 
 稍等一会儿可以用mmm_control show 查看状态
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/查看监控状态.png)
+![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/运维/201510/mysql-mmm双主多从读写分离搭建/查看监控状态.png)
 
 测试故障转移，关闭hadoop01上的mysql服务
-![ls 查看监控状态-关闭hadoop01](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/查看监控状态-关闭hadoop01.png)
+![ls 查看监控状态-关闭hadoop01](https://github.com/lenxeon/notes/blob/master/运维/201510/mysql-mmm双主多从读写分离搭建/查看监控状态-关闭hadoop01.png)
 
 测试故障转移，重启hadoop01上的mysql服务并关闭hadoop02上的mysql服务
-![ls 查看监控状态-重启hadoop01并关闭hadoop02](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/查看监控状态-重启hadoop01并关闭hadoop02.png)
+![ls 查看监控状态-重启hadoop01并关闭hadoop02](https://github.com/lenxeon/notes/blob/master/运维/201510/mysql-mmm双主多从读写分离搭建/查看监控状态-重启hadoop01并关闭hadoop02.png)
