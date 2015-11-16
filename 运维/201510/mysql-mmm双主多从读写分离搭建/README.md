@@ -6,7 +6,7 @@
 
 ## 整体规划
 
-母机1台：l5630x2 8g PC3-10600x12
+母机1台：l5630x2 PC3-10600 8gx12
 
 虚拟机5台：centos6.7 mysql5.6 单机16G内存
 
@@ -28,8 +28,10 @@
 | 192.168.1.202 | reader |
 | 192.168.1.203 | reader |
 
-## 开始配置
+## 第一队段：安装并配置mysql
+
 ### 安装并配置mysql
+
 5 台机器都安装mysql5.6 配置文件如下,核心的是注释下面开始的部分。另外每台机器的server_id要不一样，
 参考规划里面的server_id进行配置
 
@@ -127,20 +129,179 @@ GRANT REPLICATION SLAVE                  ON *.* TO 'replication'@'%' IDENTIFIED 
 FLUSH PRIVILEGES;
 ```
 
+## 第二阶段：设置主从同步。下面开始进入重点步骤了，先锁住hadoop01主机上的mysql，记录数据库状态，并导出mysql数据库，scp复制到hadoop02-05上
 
+以下代码均在hadoop01上执行：
 
+### 锁住数据库，并展示主数据库的信息
 
+```mysql
+FLUSH TABLES WITH READ LOCK;   
+SHOW MASTER STATUS;
+```
+大概会看到类似下面的结果，核心的是日志文件名称和偏移位置：mysql-bin.000001，781
 
-##使用示例及测试
+![ls 当前主数据库状态](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/当前主数据库状态.png)
 
-配置
+### 备份数据库
+先不要结束这个shell,再开一个新shell ssh到hadoop01，准备备份mysql
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/jackson同一实体在不同的场景下指定输出不同的字段/配置.png)
+> mysqldump -uroot -p --all-databases > db.sql
 
-配置前
+### 解除数据库的锁
+> UNLOCK TABLES;
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/jackson同一实体在不同的场景下指定输出不同的字段/测试结果-配置前.png)
+### scp刚才的备份到其它四台机器
 
-配置后
+> scp /etc/my.cnf hadoop02:/etc
+> scp /etc/my.cnf hadoop03:/etc
+> scp /etc/my.cnf hadoop04:/etc
+> scp /etc/my.cnf hadoop05:/etc
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/jackson同一实体在不同的场景下指定输出不同的字段/测试结果-配置后.png)
+### 在hadoop02-05上导入数据库，并开启slave进程
+> mysql -uroot -p < db.sql
+
+```mysql
+flush privileges;  
+
+CHANGE MASTER TO master_host='192.168.1.11', master_port=3306, master_user='replication',master_password='replication', master_log_file='mysql-bin.000001', master_log_pos=781;  
+
+start slave;  
+show slave status\G
+```
+
+![ls 从数据库状态](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/从数据库状态.png)
+
+### 经过上面这一段操作，hadoop02-05可以从hadoop01同步数据了，接下来设置双master,让hadoop01以hadoop02为主库
+在hadoop02上
+
+#### 锁住数据库，并展示主数据库的信息
+
+```mysql
+FLUSH TABLES WITH READ LOCK;   
+SHOW MASTER STATUS;
+```
+核心的是日志文件名称和偏移位置：mysql-bin.000001，1180，和上面的相似就不给图了。
+
+#### 不用备份数据库了，直接在hadoop01上执行
+```mysql
+flush privileges;  
+
+CHANGE MASTER TO master_host='192.168.1.12', master_port=3306, master_user='replication',master_password='replication', master_log_file='mysql-bin.000001', master_log_pos=1180;  
+
+start slave;
+show slave status\G
+```
+
+## 第三阶段，开启mmm-agent和mmm-monitor服务
+
+###在hadoop01上配置 /etc/mysql-mmm/mmm_common.cnf,并scp复制到hadoop02-05
+
+```configure
+active_master_role      writer
+
+<host default>
+    cluster_interface       eth0
+
+    pid_path                /var/run/mysql-mmm/mmm_agentd.pid
+    bin_path                /usr/libexec/mysql-mmm/
+
+    replication_user        replication
+    replication_password    replication
+
+    agent_user              mmm_agent
+    agent_password          agent
+</host>
+
+<host hadoop01>
+    ip      192.168.1.11
+    mode    master
+    peer    hadoop02
+</host>
+
+<host hadoop02>
+    ip      192.168.1.12
+    mode    master
+    peer    hadoop01
+</host>
+
+<host hadoop03>
+    ip      192.168.1.13
+    mode    slave
+</host>
+
+<host hadoop04>
+    ip      192.168.1.14
+    mode    slave
+</host>
+
+<role writer>
+    hosts   hadoop01, hadoop02
+    ips     192.168.1.200
+    mode    exclusive
+</role>
+
+<role reader>
+    hosts   hadoop02, hadoop03, hadoop04
+    ips     192.168.1.201, 192.168.1.202, 192.168.1.203
+    mode    balanced
+</role>
+
+```
+
+###在hadoop01-05上配置 /etc/mysql-mmm/mmm_agent.cnf
+把this db1修改为对应的hadoop0x
+并启动 agent 服务
+
+```shell
+# cd /etc/init.d/
+# chkconfig mysql-mmm-agent on
+# service mysql-mmm-agent start
+```
+
+###在hadoop05上配置 /etc/mysql-mmm/mmm_mon.cnf
+
+```configure
+include mmm_common.conf
+
+<monitor>
+    ip                  192.168.84.174
+    pid_path            /var/run/mysql-mmm/mmm_mond.pid
+    bin_path            /usr/libexec/mysql-mmm
+    status_path         /var/lib/mysql-mmm/mmm_mond.status
+    ping_ips            192.168.1.11, 192.168.1.12, 192.168.1.13, 192.168.1.14
+    auto_set_online     60
+
+    # The kill_host_bin does not exist by default, though the monitor will
+    # throw a warning about it missing.  See the section 5.10 "Kill Host
+    # Functionality" in the PDF documentation.
+    #
+    # kill_host_bin     /usr/libexec/mysql-mmm/monitor/kill_host
+    #
+</monitor>
+
+<host default>
+    monitor_user        mmm_monitor
+    monitor_password    monitor
+</host>
+
+debug 0 #是否开启日志 0不开启 1开启
+
+```
+并启动 monitor 服务
+
+```shell
+# cd /etc/init.d/
+# chkconfig mysql-mmm-monitor on
+# service mysql-mmm-monitor start
+```
+
+稍等一会儿可以用mmm_control show 查看状态
+
+![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/查看监控状态.png)
+
+测试故障转移，关闭hadoop01上的mysql服务
+![ls 查看监控状态-关闭hadoop01](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/查看监控状态-关闭hadoop01.png)
+
+测试故障转移，重启hadoop01上的mysql服务并关闭hadoop02上的mysql服务
+![ls 查看监控状态-重启hadoop01并关闭hadoop02](https://github.com/lenxeon/notes/blob/master/运维/201511/mysql-mmm双主多从读写分离搭建/查看监控状态-重启hadoop01并关闭hadoop02.png)
