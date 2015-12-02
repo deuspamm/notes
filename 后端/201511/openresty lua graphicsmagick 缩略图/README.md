@@ -26,6 +26,12 @@
 1. 可以写个脚本删除多少天以内没有访问过的冷数据
 
 ```lua
+-- 根据一个网址: http://localhost/img_crop_service/{方案1-3}/{width}/{height}/{filename}?url={原图地址}
+-- 如：http://localhost/img_crop_service/1/40/30/123.jpg?url=http://img0.bdstatic.com/img/image/26171547af11b48f5a89bc279d9548811426747517.jpg
+-- 第一步：将原图地址md5,获取这个图的保存路径为：md5(url)前三位/md5(url)次三位/md5
+-- 第二步：检查要生成的目标小图在不在，存在redirect到处理结果路径：原图本地路径_{width}x{height}_m{方案}
+-- 第三步：如果第二步中不在，检查原图在不在，先下载并保存
+-- 第四步：根据方案生成小图，重新按第二步的方案处理。
 
 
 -- 写入文件
@@ -69,29 +75,35 @@ local ori_file_path = dir..md5;
 local min_file_name = md5.."_"..width.."x"..height.."_"..model;
 local min_file_path = dir..min_file_name;
 
-ngx.header["mmm"] = model;
+------ngx.header["mmm"] = model;
 
+------ngx.header["step"] = 1;
 
 -- --第二步：是否已经生成过了
 
 if file_exists(min_file_path) then
-    ngx.header["min_file_path"] = min_file_path;
+    ------ngx.header["min_file_path"] = min_file_path;
     -- /imgservice/603/9eb/6039ebd7e2f78f755cccf47907174c00_100x100_m1
     local redirect = "/img_service/"..first.."/"..second.."/"..min_file_name;
     local res = ngx.location.capture(redirect)
     if res.status == 200 then
       ngx.print(res.body)
     end
+    ------ngx.header["step"] = 2;
 end
 
 
 -- --第三步：原图在不在，不在下载
 
 if not file_exists(ori_file_path) then
-    ngx.header["ori_file_path"] = ori_file_path;
+
+    ------ngx.header["ori_file_path"] = ori_file_path;
     local http = require("resty.http")
     --创建http客户端实例
     local httpc = http.new()
+    url = (string.gsub(url, "www.6study.com", "127.0.0.1"))
+    url = (string.gsub(url, "6study.com", "127.0.0.1"))
+    url = (string.gsub(url, "localhost", "127.0.0.1"))
 
     local resp, err = httpc:request_uri(url, {
         method = "GET",
@@ -100,28 +112,35 @@ if not file_exists(ori_file_path) then
             ["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.111 Safari/537.36"
         }
     })
-
-    if not resp then
-        ngx.say("request error :", err)
-        return ngx.exit(500)
+    ------ngx.header["url"] = url;
+    ------ngx.header["step"] = 3.1;
+    if not resp or resp.status >=300 then
+        ngx.header["step"] = 3.2;
+        ------ngx.header["down error"] = err;
+        -- ngx.say("request error :", err)
+        ngx.exit(404)
+    else
+        ngx.header["step"] = 3.3;
+        if not is_dir(dir) then
+            ------ngx.header["mkdir"] = dir;
+            os.execute("mkdir -p " .. dir)
+        end
+        --响应体
+        --------ngx.header["writefile"] = "true";
+        ------ngx.header["ori_file_path"] = ori_file_path;
+        writefile(ori_file_path, resp.body)
     end
-
-    if not is_dir(dir) then
-        os.execute("mkdir -p " .. dir)
-        ngx.header["mkdir"] = dir;
-    end
-    --响应体
-    --ngx.header["writefile"] = "true";
-    ngx.header["ori_file_path"] = ori_file_path;
-    writefile(ori_file_path, resp.body)
     httpc:close()
+    ------ngx.header["step"] = 3;
 end
 
 -- --第四步：生成小图
 
 if not file_exists(ori_file_path) then
-    return ngx.exit(500)
+    ------ngx.header["step"] = 4;
+    ngx.exit(500)
 else
+    ------ngx.header["step"] = 5;
 
 -- m1 定宽等比绽放，小于宽度不处理
 -- gm convert t.jpg -resize "300x100000>" -quality 30 output_1.jpg
@@ -158,22 +177,24 @@ else
         .. " -quality 90 "
         .. min_file_path;
     end
-    ngx.header.command = command;
+    ------ngx.header.command = command;
     os.execute(command);  
 end
 
 
 if file_exists(min_file_path) then
+    ------ngx.header["step"] = 6;
     -- /imgservice/603/9eb/6039ebd7e2f78f755cccf47907174c00_100x100_m1
     local redirect = "/img_service/"..first.."/"..second.."/"..min_file_name;
-    ngx.header["min_file_path"] = min_file_path;
-    ngx.header["redirect"] = redirect;
+    ------ngx.header["min_file_path"] = min_file_path;
+    ------ngx.header["redirect"] = redirect;
     local res = ngx.location.capture(redirect)
     if res.status == 200 then
       ngx.print(res.body)
     end
     ngx.exit(200)
 else
+    ------ngx.header["step"] = 7;
     ngx.exit(404)
 end
 
