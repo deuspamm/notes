@@ -26,8 +26,7 @@
 1. 可以写个脚本删除多少天以内没有访问过的冷数据
 
 ```lua
--- 根据一个网址: http://localhost/img_crop_service/{方案1-3}/{width}/{height}/{filename}?url={原图地址}
--- 如：http://localhost/img_crop_service/1/40/30/123.jpg?url=http://img0.bdstatic.com/img/image/26171547af11b48f5a89bc279d9548811426747517.jpg
+-- 根据一个网址: http://localhost/img_crop_service/{方案1-3}/{width}/{height}/{quality}/{filename}?url={原图地址}
 -- 第一步：将原图地址md5,获取这个图的保存路径为：md5(url)前三位/md5(url)次三位/md5
 -- 第二步：检查要生成的目标小图在不在，存在redirect到处理结果路径：原图本地路径_{width}x{height}_m{方案}
 -- 第三步：如果第二步中不在，检查原图在不在，先下载并保存
@@ -40,6 +39,14 @@ local function writefile(filename, data)
     assert(wfile)  --打开时验证是否出错      
     wfile:write(data)  --写入传入的内容
     wfile:close()  --调用结束后记得关闭
+end
+
+--获取文件大小
+local function length_of_file(filename)
+    local fh = assert(io.open(filename, "rb"))
+    local len = assert(fh:seek("end"))
+    fh:close()
+    return len
 end
 
 -- 检测路径是否目录
@@ -64,15 +71,21 @@ end
 local model = ngx.var.model;
 local width = ngx.var.width;
 local height = ngx.var.height;
+local quality = ngx.var.quality;
 local img_root = ngx.var.img_root;
 local url = ngx.var.url;
+if (model == "m9") then
+    width = 0;
+    height = 0;
+    quality = 0;
+end
 --根据url推算文件应该存放在哪个位置,存放规则:md5(url)前三位/md5(url)次三位/md5
 local md5 = ngx.md5(url);
 local first = string.sub(md5, 0, 3);
 local second = string.sub(md5, 4, 6);
 local dir = img_root.."/"..first.."/"..second.."/";
 local ori_file_path = dir..md5;
-local min_file_name = md5.."_"..width.."x"..height.."_"..model;
+local min_file_name = md5.."_"..width.."x"..height.."_"..model.."_"..quality;
 local min_file_path = dir..min_file_name;
 
 ------ngx.header["mmm"] = model;
@@ -89,6 +102,7 @@ if file_exists(min_file_path) then
     if res.status == 200 then
       ngx.print(res.body)
     end
+    ngx.exit(200)
     ------ngx.header["step"] = 2;
 end
 
@@ -142,21 +156,24 @@ if not file_exists(ori_file_path) then
 else
     ------ngx.header["step"] = 5;
 
--- m1 定宽等比绽放，小于宽度不处理
--- gm convert t.jpg -resize "300x100000>" -quality 30 output_1.jpg
+    -- m1 定宽等比绽放，小于宽度不处理
+    -- gm convert t.jpg -resize "300x100000>" -quality 30 output_1.jpg
 
--- m2 等比绽放，裁剪，比较适合头象，logo之类的需要固定大小的展示
--- gm convert sh.jpg -thumbnail "100x100^" -gravity center -extent 100x100 -quality 30 output_3.jpg
+    -- m2 等比绽放，裁剪，比较适合头象，logo之类的需要固定大小的展示
+    -- gm convert sh.jpg -thumbnail "100x100^" -gravity center -extent 100x100 -quality 30 output_3.jpg
 
--- m3 等比绽放，不足会产生白边
--- gm convert sh.jpg -thumbnail "100x100" -gravity center -extent 100x100 -quality 30 output_3.jpg
+    -- m3 等比绽放，不足会产生白边
+    -- gm convert sh.jpg -thumbnail "100x100" -gravity center -extent 100x100 -quality 30 output_3.jpg
+
+    -- m9 无视参数宽 高 质量，由服务器固定图像质量，对质量进行压缩
+    -- gm convert sh.jpg -quality 30 output_3.jpg
 
     local command = "";
     if (model == "m1") then
         command = "gm convert " .. ori_file_path  
         .. " -resize \"" .. width .."x100000>\""
         .. " -background \"#fafafa\" "
-        .. " -quality 90 "
+        .. " -quality " .. quality .. " "
         .. min_file_path;
     elseif (model == "m2") then
         local size = width.."x"..height.."^";
@@ -165,7 +182,7 @@ else
         .. " -gravity center "
         .. " -background \"#fafafa\" "
         .. " -extent " .. size
-        .. " -quality 90 "
+        .. " -quality " .. quality .. " "
         .. min_file_path;
     elseif (model == "m3") then
         local size = width.."x"..height;
@@ -174,10 +191,28 @@ else
         .. " -gravity center "
         .. " -background \"#fafafa\" "
         .. " -extent " .. size
-        .. " -quality 90 "
+        .. " -quality " .. quality .. " "
+        .. min_file_path;
+    elseif (model == "m9") then
+        local length = length_of_file(ori_file_path)
+        --ngx.header.length = length;
+        if length > 1024*1024 then
+            quality = 35
+        elseif length > 100*1024 then
+            quality = 65
+        else
+            quality = 90
+        end
+        local size = width.."x"..height;
+        command = "gm convert " .. ori_file_path  
+        -- .. " -thumbnail " .. size .." "
+        -- .. " -gravity center "
+        -- .. " -background \"#fafafa\" "
+        -- .. " -extent " .. size
+        .. " -quality " .. quality .. " "
         .. min_file_path;
     end
-    ------ngx.header.command = command;
+    ngx.header.command = command;
     os.execute(command);  
 end
 
@@ -194,7 +229,7 @@ if file_exists(min_file_path) then
     end
     ngx.exit(200)
 else
-    ------ngx.header["step"] = 7;
+    ngx.header["step"] = 7;
     ngx.exit(404)
 end
 
@@ -204,29 +239,30 @@ nginx的配置
 
 ```conf
 location /img_service {
-        default_type text/plain;
-        root /Volumes/data/workspace/lua_service;
+    default_type text/plain;
+    root /Volumes/data/workspace/lua_service;
 }
 
 location /img_crop_service {
-    resolver 223.5.5.5;
+  resolver 223.5.5.5;  
     default_type text/plain;
-    alias /Volumes/data/workspace/lua_service/img_service;
-    set $img_root "/Volumes/data/workspace/lua_service/img_service";
-    if ($uri ~ "/img_crop_service/(m[1-3])/([0-9]+)/([0-9]+)/(.*)") {
-        set $model $1;
-        set $width $2;
-        set $height $3;
+  alias /Volumes/data/workspace/lua_service/img_service;
+  set $img_root "/Volumes/data/workspace/lua_service/img_service";
+  if ($uri ~ "/img_crop_service/(m[1-9])/([0-9]+)/([0-9]+)/([0-9]+)/(.*)") {
+		set $model $1;
+		set $width $2;
+		set $height $3;
+        set $quality $4;
         set $dir "$img_root";
-        set $file "$dir$4";
-        set $req_args "$args";
-    }
-    if ($args ~ "url=(.*)") {
-        set $url $1;
-    }
-    #if (!-f $file) {
-        content_by_lua_file "/Volumes/data/workspace/lua_service/img_service/http_proxy.lua";
-    #}
+		set $file "$dir$5";
+		set $req_args "$args";
+  }
+  if ($args ~ "url=(.*)") {
+  set $url $1;
+  }
+  #if (!-f $file) {
+    content_by_lua_file "/Volumes/data/workspace/lua_service/img_service/http_proxy.lua";
+  #}
 }
 ```
 
