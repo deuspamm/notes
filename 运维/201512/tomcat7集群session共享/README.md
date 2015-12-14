@@ -7,7 +7,7 @@
 被要求重新登陆的情况
 
 ## 部署session共享
-  这里我已经整理好了所需要的所有的jar文件，大家只需要下载[jar](https://github.com/lenxeon/notes/blob/master/运维/201512/tomcat7集群session共享/jar.zip)解压到tomcat7下的lib目录即可
+  这里我已经整理好了所需要的所有的jar文件，大家只需要下载[ 所需jar包 ](https://github.com/lenxeon/notes/blob/master/运维/201512/tomcat7集群session共享/jar.zip)解压到tomcat7下的lib目录即可
   修改配置文件conf/context.xml中增加（注意修改配置中的ip）
 
 ```
