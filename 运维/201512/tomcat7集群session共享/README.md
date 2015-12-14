@@ -23,5 +23,21 @@
 />
 ```
 
+##写一个简单的测试文件，看看多次请求sessionId是否会发生变化
+```
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>鱼骨系统-任务</title>
+</head>
+<body>
+    <%
+        String sessionId = request.getSession().getId();
+    %>
+    <div>sessionId:<%=sessionId%></div>
+</body>
+</html>
+```
 
+多次刷新可以看到结果保持不变
 ![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/运维/201512/tomcat7集群session共享/Session共享.png)
