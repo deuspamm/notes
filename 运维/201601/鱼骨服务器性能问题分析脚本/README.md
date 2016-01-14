@@ -73,10 +73,6 @@ grep ServiceAspect catalina.out  | grep task
 
 ```shell
 找出其中有问题的，比如先看最严重的，大于100ms的
-
-==============end  task===============
-
-==============start task===============
 grep ServiceAspect catalina.out  | grep task | awk -F ' ' '$7>100 {print $1" "$6" " $7}' | grep ^2016 |sort | awk '{a[$2]+=$3;b[$2]++}END{for(n in a)print a[n]/b[n]"\t"n}'
 
 436	com.fishbone.res.dao.impl.ResServiceImpl.getMeta
@@ -89,5 +85,4 @@ grep ServiceAspect catalina.out  | grep task | awk -F ' ' '$7>100 {print $1" "$6
 255	com.fishbone.kpi.dao.impl.AimInsItemServiceImpl.save
 167.076	com.fishbone.task.dao.impl.TaskServiceImpl.sync
 204.857	com.fishbone.task.dao.impl.TaskServiceImpl.countTaskByMongo
-==============end  task===============
 ```
