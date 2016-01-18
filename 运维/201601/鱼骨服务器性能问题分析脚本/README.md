@@ -72,7 +72,29 @@ grep ServiceAspect catalina.out  | grep task
 ```
 
 ```shell
-找出其中有问题的，比如先看最严重的，大于100ms的
+先来一个按调用次数排序
+grep ServiceAspect catalina.out  | grep task | awk -F ' ' '$7>10 {print $1" "$6" " $7}' | grep ^2016 | awk '{a[$2]+=1;b[$2]++}END{for(n in a)print a[n]"\t"n}' | sort -rn -k1
+1559	com.fishbone.task.dao.impl.TaskServiceImpl.syncCount
+1400	com.fishbone.file.dao.impl.FileInfoServiceImpl.findByUUID
+887	com.fishbone.task.dao.impl.TaskServiceImpl.sync
+867	com.fishbone.res.dao.impl.ResServiceImpl.loadRelRes
+675	com.fishbone.auth.dao.impl.CreditConfigServiceImpl.list
+494	com.fishbone.task.dao.impl.TaskServiceImpl.loadRelRes
+333	com.fishbone.task.dao.impl.TaskServiceImpl.countAll
+259	com.fishbone.task.dao.impl.TaskServiceImpl.readOne
+220	com.fishbone.task.dao.impl.TaskServiceImpl.findByUUID
+212	com.fishbone.task.dao.impl.TaskServiceImpl.listTaskByMongo
+156	com.fishbone.task.dao.impl.TaskServiceImpl.insertUnreadV2
+132	com.fishbone.res.dao.impl.ResServiceImpl.processRelSave
+122	com.fishbone.auth.dao.impl.CreditConfigServiceImpl.getManagerList
+117	com.fishbone.hr.dao.impl.HopeWordServiceImpl.list
+109	com.fishbone.auth.dao.impl.AuthorityServiceImpl.listUserByAuth
+103	com.fishbone.comment.dao.impl.CommentServiceImpl.sync
+92	com.fishbone.kpi.dao.impl.AimInsServiceImpl.listKpi
+```
+
+```shell
+再来一个平均的，大于100ms的
 grep ServiceAspect catalina.out  | grep task | awk -F ' ' '$7>100 {print $1" "$6" " $7}' | grep ^2016 |sort | awk '{a[$2]+=$3;b[$2]++}END{for(n in a)print a[n]/b[n]"\t"n}'
 
 436	com.fishbone.res.dao.impl.ResServiceImpl.getMeta
@@ -85,4 +107,23 @@ grep ServiceAspect catalina.out  | grep task | awk -F ' ' '$7>100 {print $1" "$6
 255	com.fishbone.kpi.dao.impl.AimInsItemServiceImpl.save
 167.076	com.fishbone.task.dao.impl.TaskServiceImpl.sync
 204.857	com.fishbone.task.dao.impl.TaskServiceImpl.countTaskByMongo
+```
+
+```shell
+按调用次数排序，并计算平均值
+grep ServiceAspect catalina.out  | grep task | awk -F ' ' '$7>100 {print $1" "$6" " $7}' | grep ^2016 |sort | awk '{a[$2]+=$3;b[$2]++}END{for(n in a)print b[n] "\t" a[n]/b[n]"\t"n}'| sort -rn -k1
+
+1154	191.964	com.fishbone.task.dao.impl.TaskServiceImpl.syncCount
+709	258.553	com.fishbone.task.dao.impl.TaskServiceImpl.sync
+429	522.368	com.fishbone.res.dao.impl.ResServiceImpl.loadRelRes
+234	658.252	com.fishbone.comment.dao.impl.CommentServiceImpl.sync
+223	288.296	com.fishbone.comment.dao.impl.CommentServiceImpl.syncCount
+185	184.184	com.fishbone.file.dao.impl.FileInfoServiceImpl.findExpByCheckNum
+152	166.138	com.fishbone.kpi.dao.impl.AimInsItemServiceImpl.listTask
+121	719.818	com.fishbone.task.dao.impl.TaskServiceImpl.loadRelRes
+109	255.78	com.fishbone.report.dao.impl.ReportServiceImpl.loadSummaryHis
+97	159.278	com.fishbone.kpi.dao.impl.AimInsServiceImpl.analyzeAimIns
+56	802.036	com.fishbone.task.dao.impl.TaskServiceImpl.analyzeUnreadV2
+55	770.055	com.fishbone.file.dao.impl.FileInfoServiceImpl.listRes
+49	1701.29	com.fishbone.task.dao.impl.TaskServiceImpl.getParentChild
 ```
