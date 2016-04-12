@@ -162,3 +162,80 @@ apps的pom，添加mod-01,mod-02的依赖
     </dependencies>
 </project>
 ```
+
+
+##各个模块中的关键代码
+
+mod-01的业务逻辑
+```java
+package com.lenxeon;
+
+
+public class Logic1 {
+    public String say() {
+        return "我是模块-01";
+    }
+}
+
+```
+
+
+mod-02的业务逻辑
+```java
+package com.lenxeon;
+
+
+public class Logic2 {
+    public String say() {
+        Logic1 loc1 = new Logic1();
+        return "我是模块-02，正调用" + loc1.say();
+    }
+}
+
+
+```
+
+
+apps 中的调度
+```java
+package com.lenxeon;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/api")
+public class MyServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String mod = req.getParameter("mod");
+        String result = "请选择模块";
+        if ("01".equals(mod)) {
+            Logic1 logic1 = new Logic1();
+            result = logic1.say();
+        } else if ("02".equals(mod)) {
+            Logic2 logic2 = new Logic2();
+            result = logic2.say();
+        }
+        resp.setCharacterEncoding("utf-8");
+        resp.getWriter().write(result);
+        resp.getWriter().flush();
+        resp.getWriter().close();
+    }
+}
+```
+
+
+##请求效果
+
+![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/result-01.png)
+
+![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/result-02.png)
+
+
+##源码地址
+https://github.com/lenxeon/lab/tree/master/mvn-project
