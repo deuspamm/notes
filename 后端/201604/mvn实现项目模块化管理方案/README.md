@@ -37,4 +37,128 @@
 添加一个web的模块，一会儿这个模块要依赖上面两个模块工作
 ![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-07.png)
 
+全部建完后的样子，同时可以把最外层的src目录给删除了，用不着
 ![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-08.png)
+
+
+##各个模块的pom如何配置
+我们先来假设一下场景：
+1. 有一些公共的依赖，比如：commons-lang两个模块都需要依赖
+1. mod-02对mod-01有依赖
+1. apps模块需要同时依赖mod-01,mod-02两个模块
+
+总的那个pom，添加commons-lang
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.lenxeon</groupId>
+    <artifactId>myproject</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>mod-01</module>
+        <module>mod-02</module>
+        <module>apps</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+    </dependencies>
+
+
+</project>
+```
+
+
+mod-02的pom，添加mod-01的依赖
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>myproject</artifactId>
+        <groupId>com.lenxeon</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mod-02</artifactId>
+    <packaging>jar</packaging>
+
+    <name>mod-02</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lenxeon</groupId>
+            <artifactId>mod-01</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+</project>
+```
+
+
+apps的pom，添加mod-01,mod-02的依赖
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>myproject</artifactId>
+        <groupId>com.lenxeon</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mod-02</artifactId>
+    <packaging>jar</packaging>
+
+    <name>mod-02</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lenxeon</groupId>
+            <artifactId>mod-01</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lenxeon</groupId>
+            <artifactId>mod-02</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+</project>
+```
