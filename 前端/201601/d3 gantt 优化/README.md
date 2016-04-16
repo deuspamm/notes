@@ -6,4 +6,4 @@
 展示下新的效果，如果您喜欢可以去我们的官网下载鱼骨体验。目前客户端是QT的流畅性有点问题，客户端同事正在努力研究webkit内核
 
 * 总体的效果预览
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/d3 gantt 优化/gantt.gif)
+![ls](https://github.com/lenxeon/notes/blob/master/后端/201601/d3 gantt 优化/gantt.gif)
