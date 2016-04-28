@@ -25,6 +25,7 @@
 * [后端-201604-mvn实现项目模块化管理方案](https://github.com/lenxeon/notes/tree/master/后端/201604/mvn实现项目模块化管理方案)
 * [后端-201604-quartz整合到spring后不执行任务](https://github.com/lenxeon/notes/tree/master/后端/201604/quartz整合到spring后不执行任务)
 * [后端-201604-鱼骨参数验证方案(待补充)](https://github.com/lenxeon/notes/tree/master/后端/201604/鱼骨参数验证方案(待补充))
+* [后端-201604-简述鱼骨是如何把quartz做成一个通用服务的](https://github.com/lenxeon/notes/tree/master/后端/201604/简述鱼骨是如何把quartz做成一个通用服务的)
 * [后端-201604-鱼骨曾经的一道场景面试(待补充)](https://github.com/lenxeon/notes/tree/master/后端/201604/鱼骨曾经的一道场景面试(待补充))
 * [后端-201604-多国语言方案在鱼骨中的应用(待补充)](https://github.com/lenxeon/notes/tree/master/后端/201604/多国语言方案在鱼骨中的应用(待补充))
 * [前端-201604-最近写了一段时间前端的感受extjs react fis3](https://github.com/lenxeon/notes/tree/master/前端/201604/最近写了一段时间前端的感受extjs react fis3)
