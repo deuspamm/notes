@@ -23,6 +23,7 @@
 * [运维-201601-鱼骨服务器性能问题分析脚本](https://github.com/lenxeon/notes/tree/master/运维/201601/鱼骨服务器性能问题分析脚本)
 * [后端-201604-Shiro在用户注册登陆应用示例](https://github.com/lenxeon/notes/tree/master/后端/201604/Shiro在用户注册登陆应用示例)
 * [后端-201604-mvn实现项目模块化管理方案](https://github.com/lenxeon/notes/tree/master/后端/201604/mvn实现项目模块化管理方案)
+* [后端-201604-quartz整合到spring后不执行任务](https://github.com/lenxeon/notes/tree/master/后端/201604/quartz整合到spring后不执行任务)
 * [后端-201604-鱼骨参数验证方案(待补充)](https://github.com/lenxeon/notes/tree/master/后端/201604/鱼骨参数验证方案(待补充))
 * [后端-201604-鱼骨曾经的一道场景面试(待补充)](https://github.com/lenxeon/notes/tree/master/后端/201604/鱼骨曾经的一道场景面试(待补充))
 * [后端-201604-多国语言方案在鱼骨中的应用(待补充)](https://github.com/lenxeon/notes/tree/master/后端/201604/多国语言方案在鱼骨中的应用(待补充))
