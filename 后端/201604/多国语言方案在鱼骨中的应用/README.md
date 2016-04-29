@@ -6,14 +6,15 @@
 
 ## 先看一下总体的效果
 
-* 总体的效果01
+* xml的配置
 ![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/多国语言方案在鱼骨中的应用/i18-01.png)
 
-* 总体的效果02
+* 每个模块具体的使用
 ![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/多国语言方案在鱼骨中的应用/i18-02.png)
 
-## 配置
+## 具体实现
 
+* 配置文件
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -47,8 +48,10 @@
     </bean>
 </beans>
 ```
+> 上面的xml有两个重要的信息，1是自己字义了一个MyResourceBundleMessageSource，二是约定了所有包的configLocations的路径规范
 
-MyResourceBundleMessageSource
+* MyResourceBundleMessageSource
+
 ```java
 package com.lenxeon.apps.plat.i18;
 
@@ -89,8 +92,7 @@ public interface BaseNamePicker {
 }
 ```
 
-
-BaseNamePickerImpl
+* BaseNamePickerImpl
 ```java
 package com.lenxeon.apps.plat.i18;
 
@@ -155,10 +157,7 @@ public class BaseNamePickerImpl implements BaseNamePicker, InitializingBean {
 }
 ```
 
-
-
-
-properties en_US
+* properties en_US 英文配置
 ```properties
 uc.login_success=login success
 uc.user_not_exist=user not exist
@@ -178,7 +177,7 @@ uc.email_has_been_used=email has been used
 uc.vail.password_length_illegal=password [${validatedValue}] length must between {min} and {max}
 ```
 
-properties zh_CN
+* properties zh_CN 中文配置
 ```properties
 uc.login_success=\u767B\u9646\u6210\u529F
 uc.user_not_exist=\u8D26\u6237\u4E0D\u5B58\u5728
@@ -198,17 +197,10 @@ uc.email_has_been_used=\u90AE\u7BB1\u5DF2\u7ECF\u88AB\u4F7F\u7528
 uc.vail.password_length_illegal=\u5BC6\u7801[${validatedValue}]\u957F\u5EA6\u5FC5\u987B\u5728${formatter.format("%04d", min)}\u5230{max}\u4E4B\u95F4${pageContext.request.requestURL}
 ```
 
-
-使用时
+* 封装的调用工具，主要是根据请求的header中的信息来决定获取哪国的message
 ```java
 package com.lenxeon.apps.plat.utils;
 
-
-import com.dangdang.config.service.ConfigGroup;
-import com.dangdang.config.service.file.FileConfigGroup;
-import com.dangdang.config.service.file.FileConfigProfile;
-import com.dangdang.config.service.zookeeper.ZookeeperConfigGroup;
-import com.dangdang.config.service.zookeeper.ZookeeperConfigProfile;
 import com.lenxeon.utils.str.FastStringBuilder;
 import com.lenxeon.utils.str.StringFormat;
 import org.apache.commons.lang.StringUtils;
@@ -258,4 +250,18 @@ public class LocaleUtils {
         return StringUtils.defaultString(message);
     }
 }
+```
+
+* 业务中使用的示例代码片段
+``` java
+
+    @Autowired
+    private LocaleUtils localeUtils;
+
+    //示例代码片段
+    comment.setCreator(user);
+    int i = commentDao.save(comment);
+    if (i != 1) {
+        throw new IllegalArgumentException(localeUtils.getMessage("uc.common_fail"));
+    }
 ```
