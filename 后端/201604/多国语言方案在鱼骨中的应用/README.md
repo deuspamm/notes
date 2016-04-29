@@ -48,7 +48,9 @@
     </bean>
 </beans>
 ```
-> 上面的xml有两个重要的信息，1是自己字义了一个MyResourceBundleMessageSource，二是约定了所有包的configLocations的路径规范
+> 上面的xml有两个重要的信息，
+1.是自己字义了一个MyResourceBundleMessageSource，
+2.是约定了所有包的configLocations的路径规范
 
 * MyResourceBundleMessageSource
 
