@@ -9,6 +9,9 @@
 
 ## 先来看两张效果图
 
+* 动态演示
+![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/构建鱼骨的服务器异常监控体系/exception.gif)
+
 * 订阅程序员收到的异常信息
 ![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/构建鱼骨的服务器异常监控体系/img-01.png)
 
