@@ -86,6 +86,31 @@ log4j.appender.errorTXT.layout.ConversionPattern = %d{yyyy-MM-dd HH:mm:ss}:%p %t
 
 ## 在了解了logback后，感觉比较满足我们的要求，所以做了一次尝试,注释比较全面了，完全实现了我们的预期
 
+pom.xml
+```xml
+
+    <properties>
+        <httpclient.version>4.5.1</httpclient.version>
+        <!-- Log libs -->
+        <slf4j_version>1.7.2</slf4j_version>
+        <jcl_version>1.1</jcl_version>
+        <log4j_version>1.2.16</log4j_version>
+        <logback_version>1.0.6</logback_version>
+        <jcl_over_slf4j_version>1.7.7</jcl_over_slf4j_version>
+    </properties>
+
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j_version}</version>
+    </dependency>
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback_version}</version>
+    </dependency>
+```
+
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 
