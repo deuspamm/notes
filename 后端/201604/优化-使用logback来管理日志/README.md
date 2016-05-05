@@ -130,6 +130,7 @@ pom.xml
 
     <!--info 文件输出-->
 	<appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 按日期区分的滚动日志 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${logBase}/info.%d{yyyy-MM-dd}.gz</fileNamePattern>
 			<maxHistory>3</maxHistory>
@@ -142,6 +143,7 @@ pom.xml
 
     <!--error 文件输出-->
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 按日期区分的滚动日志 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${logBase}/error.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>3</maxHistory>
@@ -189,26 +191,29 @@ pom.xml
     <logger name="org.springframework" level="INFO" />
 
 
-    <!--下面这三段的意思是将error,warn级别输出到error文件中,info级别输出到info文件中,同时所有的日志都从控制台上输出-->
-    <logger name="com.lenxeon" level="ERROR" additivity="false">
-        <appender-ref ref="stdout"/>
-        <appender-ref ref="async-error"/>
-    </logger>
+    <!--&lt;!&ndash;下面这三段的意思是将error,warn级别输出到error文件中,info级别输出到info文件中,同时所有的日志都从控制台上输出&ndash;&gt;-->
+    <!--<logger name="com.lenxeon" level="ERROR" additivity="false">-->
+        <!--<appender-ref ref="stdout"/>-->
+        <!--<appender-ref ref="async-error"/>-->
+    <!--</logger>-->
 
-    <logger name="com.lenxeon" level="WARN" additivity="false">
-        <appender-ref ref="stdout"/>
-        <appender-ref ref="async-warn"/>
-    </logger>
+    <!--<logger name="com.lenxeon" level="WARN" additivity="false">-->
+        <!--<appender-ref ref="stdout"/>-->
+        <!--<appender-ref ref="async-warn"/>-->
+    <!--</logger>-->
 
-    <logger name="com.lenxeon" level="INFO" additivity="false">
-        <appender-ref ref="stdout"/>
-        <appender-ref ref="async-info"/>
-    </logger>
+    <!--<logger name="com.lenxeon" level="INFO" additivity="false">-->
+        <!--<appender-ref ref="stdout"/>-->
+        <!--<appender-ref ref="async-info"/>-->
+    <!--</logger>-->
 
 
 	<!--总的配置,默认将级别设定在info-->
 	<root level="WARN">
 		<appender-ref ref="stdout" />
+        <appender-ref ref="async-info"/>
+        <appender-ref ref="async-warn"/>
+        <appender-ref ref="async-error"/>
 	</root>
 </configuration>
 ```
