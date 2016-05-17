@@ -253,3 +253,171 @@ public class LogTest {
 
 * 测试效果error文件
 ![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/优化-使用logback来管理日志/error.png)
+
+
+5.17日 新增一个功能，将某一个日志点记录到独立的文件中，比如：项目中有一个日志点是记录每一个接口的响应时间的，希望该这个记录单独记录到独立的文件中,假设这个日志点是 monitor
+
+```java
+package test;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
+
+public class LogTest {
+
+    private static Logger logger = LoggerFactory.getLogger(LogTest.class);
+
+    private static Logger monitor = LoggerFactory.getLogger("monitor");
+
+
+
+    @Test
+    public void test(){
+        logger.debug("debug java");
+        logger.info("info java");
+        logger.warn("warn java");
+        Exception ex = new IllegalArgumentException("can not be null");
+        logger.error(ex.getMessage(), ex);
+        System.out.println("end");
+
+
+
+        monitor.debug("debug java");
+        monitor.info("info java");
+        monitor.warn("warn java");
+        monitor.error(ex.getMessage(), ex);
+    }
+
+}
+```
+
+将logback.xml修改为下面这样 additivity="false"禁止monitor里的内容向上传递，否则会同时显示在默认的日志中
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!--属性区-->
+	<property name="logBase" value="../logs/" />
+
+
+    <!--console输出-->
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{26}[%L] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+    <!--info 文件输出-->
+	<appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 按日期区分的滚动日志 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logBase}/info.%d{yyyy-MM-dd}.gz</fileNamePattern>
+			<maxHistory>3</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}[%L] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+    <!--error 文件输出-->
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 按日期区分的滚动日志 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logBase}/error.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}[%L] - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+
+    <!--针对 INFO 级别的日志进行过滤,并输出到 info 文件中-->
+    <appender name="async-info" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="info" />
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--针对 ERROR 级别的日志进行过滤,并输出到 error 文件中-->
+    <appender name="async-error" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="error"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--针对 WARN 级别的日志进行过滤,并输出到 error 文件中-->
+    <appender name="async-warn" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="error"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+
+    <!--针对不同的包设置不同的级别-->
+    <logger name="org.apache" level="INFO" />
+    <logger name="org.springframework" level="INFO" />
+
+
+    <!--&lt;!&ndash;下面这三段的意思是将error,warn级别输出到error文件中,info级别输出到info文件中,同时所有的日志都从控制台上输出&ndash;&gt;-->
+    <!--<logger name="com.lenxeon" level="ERROR" additivity="false">-->
+        <!--<appender-ref ref="stdout"/>-->
+        <!--<appender-ref ref="async-error"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="com.lenxeon" level="WARN" additivity="false">-->
+        <!--<appender-ref ref="stdout"/>-->
+        <!--<appender-ref ref="async-warn"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="com.lenxeon" level="INFO" additivity="false">-->
+        <!--<appender-ref ref="stdout"/>-->
+        <!--<appender-ref ref="async-info"/>-->
+    <!--</logger>-->
+
+
+	<!--总的配置,默认将级别设定在info-->
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+        <appender-ref ref="async-info"/>
+        <appender-ref ref="async-warn"/>
+        <appender-ref ref="async-error"/>
+	</root>
+
+
+    <appender name="monitor" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}[%L] - %msg%n
+            </pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logBase}/monitor.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="monitor" additivity="false" level="INFO">
+        <appender-ref ref="monitor" />
+    </logger>
+
+</configuration>
+```
