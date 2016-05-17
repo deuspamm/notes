@@ -22,7 +22,7 @@
 * [前端-201601-d3 gantt 优化](https://github.com/lenxeon/notes/tree/master/前端/201601/d3 gantt 优化)
 * [运维-201601-鱼骨服务器性能问题分析脚本](https://github.com/lenxeon/notes/tree/master/运维/201601/鱼骨服务器性能问题分析脚本)
 * [后端-201604-Shiro在用户注册登陆应用示例](https://github.com/lenxeon/notes/tree/master/后端/201604/Shiro在用户注册登陆应用示例)
-* [后端-201604-dubbo学习成果，非demo级别（待补充）](https://github.com/lenxeon/notes/tree/master/后端/201604/dubbo学习成果，非demo级别（待补充）)
+* [后端-201604-dubbo学习总结](https://github.com/lenxeon/notes/tree/master/后端/201604/dubbo学习总结)
 * [后端-201604-mvn实现项目模块化管理方案](https://github.com/lenxeon/notes/tree/master/后端/201604/mvn实现项目模块化管理方案)
 * [后端-201604-quartz整合到spring后不执行任务](https://github.com/lenxeon/notes/tree/master/后端/201604/quartz整合到spring后不执行任务)
 * [后端-201604-优化-使用logback来管理日志](https://github.com/lenxeon/notes/tree/master/后端/201604/优化-使用logback来管理日志)
@@ -32,3 +32,4 @@
 * [后端-201604-多国语言方案在鱼骨中的应用](https://github.com/lenxeon/notes/tree/master/后端/201604/多国语言方案在鱼骨中的应用)
 * [前端-201604-最近写了一段时间前端的感受extjs react fis3](https://github.com/lenxeon/notes/tree/master/前端/201604/最近写了一段时间前端的感受extjs react fis3)
 * [后端-201604-构建鱼骨的服务器异常监控体系](https://github.com/lenxeon/notes/tree/master/后端/201604/构建鱼骨的服务器异常监控体系)
+* [后端-201606-使用zookeeper+config-toolkit管理系统中的配置文件](https://github.com/lenxeon/notes/tree/master/后端/201606/使用zookeeper+config-toolkit管理系统中的配置文件)
