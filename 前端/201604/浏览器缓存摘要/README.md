@@ -242,3 +242,156 @@ ETag了
   * 再次请求
 
   ![ls](./cache-workflow-02.png)
+
+## 如何充分利用缓存 ##
+  目前已经知道缓存有两种可能：一种是服务器大包大揽（200 from cache），浏览器这个时间点之内不要来烦我了。另一种是服务器和浏览器协商，
+  浏览器告诉服务器自己本地的已有信息（If-None-Match,If-Modified-Since），服务器再和自己的文件比较决定是否要返回文件内容
+
+
+  我们的服务器上的资源通常包括以下几种：
+  1. 一些静态文件（js/css/image/html）
+    - 经常变化的：程序员自己开发用的html,css,js等
+    - 基本上不会变化的： 依赖的jquery，tree等，相信大多数时候你不会不断的去修改这些源码吧
+  2. 一些由程序动态输出的结果
+
+
+  所以我们可以集合自己的业务做一个这样的规划：
+
+  1. 假设我们是完全的前后端分离，数据前端ajax后渲染，协议是以json进行交互，所以的协议url以/api开始,这部分数据不缓存
+  ```xml
+    <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+    </filter>
+    <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+      <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+  ```
+  1. 我们认为长期不变的文件都放在以/static/目录下面，对这部分文件使用200 from cache 进行缓存
+  1. 剩下的html,css,image进行304缓存，每次都需要浏览器和服务器确认
+
+  根据上面的规划在nginx中的配置
+  ```
+  server{
+        listen       80;
+        server_name www.workin.me workin.me;
+        charset utf-8;
+
+        rewrite  ^/(.*)$ /apps-web/$1 last;
+        location ^~ /api/ {
+            access_by_lua '
+                local request = require "resty.rate.limit"
+                request.limit { key = ngx.var.remote_addr,
+                                rate = 60,
+                                interval = 60,
+                                log_level = ngx.NOTICE,
+                                redis_config = { host = "127.0.0.1", port = 6379, timeout = 1, pool_size = 100 } }
+            ';
+            proxy_pass         http://tomcat;
+            proxy_redirect     off;
+            proxy_cookie_path   /apps-web/ "/";
+
+            proxy_set_header   Host             $host;
+            proxy_set_header   X-Real-IP        $remote_addr;
+            proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+            proxy_set_header   Cookie $http_cookie;
+
+            client_body_buffer_size    128k;
+
+            proxy_connect_timeout      300;
+            #proxy_send_timeout         300;
+            proxy_read_timeout         300;
+
+            proxy_buffer_size          4k;
+            proxy_buffers              4 32k;
+            proxy_busy_buffers_size    64k;
+            proxy_temp_file_write_size 64k;
+        }
+
+        location ^~ /apps-web/static/ {
+                expires 60s; #设置为60,60s以内别再请求
+                add_header debug 1;
+                add_header Pragma public;
+                add_header Cache-Control "public";
+                proxy_pass         http://tomcat;
+                proxy_redirect     off;
+
+                proxy_set_header   Host             $host;
+                proxy_set_header   X-Real-IP        $remote_addr;
+                proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+                client_body_buffer_size    128k;
+
+                proxy_connect_timeout      300;
+                #proxy_send_timeout         300;
+                proxy_read_timeout         300;
+
+                proxy_buffer_size          4k;
+                proxy_buffers              4 32k;
+                proxy_busy_buffers_size    64k;
+                proxy_temp_file_write_size 64k;
+        }
+
+        location ~* \.(?:ico|css|js|gif|jpeg|png)$ {
+                expires 0s; #设置为0每次都协商
+                add_header debug $request_uri;
+                add_header Pragma public;
+                add_header Cache-Control "public";
+                proxy_pass         http://tomcat;
+                proxy_redirect     off;
+
+                proxy_set_header   Host             $host;
+                proxy_set_header   X-Real-IP        $remote_addr;
+                proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+                client_body_buffer_size    128k;
+
+                proxy_connect_timeout      300;
+                #proxy_send_timeout         300;
+                proxy_read_timeout         300;
+
+                proxy_buffer_size          4k;
+                proxy_buffers              4 32k;
+                proxy_busy_buffers_size    64k;
+                proxy_temp_file_write_size 64k;
+        }
+
+        # Main
+        # rewrite  ^/(.*)$ /apps-web/$1 last;
+        location / {
+            expires 0s; #设置为0每次都协商
+            proxy_pass         http://tomcat/;
+            proxy_redirect     off;
+            proxy_cookie_path   /apps-web/ "/";
+
+            proxy_set_header   Host             $host;
+            proxy_set_header   X-Real-IP        $remote_addr;
+            proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+            proxy_set_header   Cookie $http_cookie;
+
+            client_body_buffer_size    128k;
+
+            proxy_connect_timeout      300;
+            #proxy_send_timeout         300;
+            proxy_read_timeout         300;
+
+            proxy_buffer_size          4k;
+            proxy_buffers              4 32k;
+            proxy_busy_buffers_size    64k;
+            proxy_temp_file_write_size 64k;
+        }
+    }
+  ```
+  测试结果
+    可以看出，部分请求是200 from cache，部分是304
+    ![ls](./cache-page-all.png)
+    可以看出这个200 from cache跟我们的预想是一样的/static/* 这样的路径
+    ![ls](./cache-static-200.png)
+    这个是我们经常开发用的文件，所以用304的方式，满足经常修改的需要
+    ![ls](./cache-page-304.png)
