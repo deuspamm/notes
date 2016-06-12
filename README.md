@@ -34,4 +34,5 @@
 * [前端-201604-最近写了一段时间前端的感受extjs react fis3](https://github.com/lenxeon/notes/tree/master/前端/201604/最近写了一段时间前端的感受extjs react fis3)
 * [后端-201604-构建鱼骨的服务器异常监控体系](https://github.com/lenxeon/notes/tree/master/后端/201604/构建鱼骨的服务器异常监控体系)
 * [后端-201606-mac下如何管理多个版本的jdk](https://github.com/lenxeon/notes/tree/master/后端/201606/mac下如何管理多个版本的jdk)
+* [后端-201606-report-ng自动化测试报告自定义](https://github.com/lenxeon/notes/tree/master/后端/201606/report-ng自动化测试报告自定义)
 * [后端-201606-使用zookeeper+config-toolkit管理系统中的配置文件](https://github.com/lenxeon/notes/tree/master/后端/201606/使用zookeeper+config-toolkit管理系统中的配置文件)
