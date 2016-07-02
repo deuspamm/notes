@@ -88,7 +88,7 @@ location ^~ /api/ {
 ```
 lua代码，这个代码不仅提供了访问模式控制，还提供了访问频率控制
 
-![lua代码](https://github.com/lenxeon/lua_service/blob/master/lib/resty/rate/limit.lua)
+[lua 代码链接](https://github.com/lenxeon/lua_service/blob/master/lib/resty/rate/limit.lua)
 
 ##测试效果##
 
