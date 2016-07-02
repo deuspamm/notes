@@ -20,6 +20,7 @@
 * [运维-201512-tomcat7集群session共享](https://github.com/lenxeon/notes/tree/master/运维/201512/tomcat7集群session共享)
 * [运维-201512-鱼骨linx定时任务脚本规范](https://github.com/lenxeon/notes/tree/master/运维/201512/鱼骨linx定时任务脚本规范)
 * [前端-201601-d3 gantt 优化](https://github.com/lenxeon/notes/tree/master/前端/201601/d3 gantt 优化)
+* [运维-201601-nginx结合lua做访问频率控制及服务器维护模型](https://github.com/lenxeon/notes/tree/master/运维/201601/nginx结合lua做访问频率控制及服务器维护模型)
 * [运维-201601-鱼骨服务器性能问题分析脚本](https://github.com/lenxeon/notes/tree/master/运维/201601/鱼骨服务器性能问题分析脚本)
 * [后端-201604-Shiro在用户注册登陆应用示例](https://github.com/lenxeon/notes/tree/master/后端/201604/Shiro在用户注册登陆应用示例)
 * [后端-201604-dubbo学习总结](https://github.com/lenxeon/notes/tree/master/后端/201604/dubbo学习总结)
