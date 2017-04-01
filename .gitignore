@@ -1,0 +1,12 @@
+#/node_modules
+#
+/output
+.idea
+/*.iml
+/**/*.iml
+.DS_Store
+/**/*.DS_Store
+/logs
+/**/logs
+/target
+/**/target
