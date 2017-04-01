@@ -9,10 +9,10 @@
 ``` properties
 
 * 动画演示
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201606/使用zookeeper+config-toolkit管理系统中的配置文件/config.gif)
+![ls](config.gif)
 
 * 管理界面
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201606/使用zookeeper+config-toolkit管理系统中的配置文件/config.png)
+![ls](config.png)
 
 
 ``` 工具类

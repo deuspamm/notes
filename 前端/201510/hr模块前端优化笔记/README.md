@@ -4,19 +4,19 @@
 ## 当前的状况
 
 * 所有的联网信息，一共53个请求，800多k，css8个，图片4个，js30个，xhr9个 总体来看页面不算太大，但请求数偏多，其中js占了30个，另外可以看出xhr中有一条非常长的绿色线最后那个请求占用了太长的时间，需要优化后端
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/考勤优化分析.png)
+![ls 效果图](考勤优化分析.png)
 
 * js部分
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/考勤js.png)
+![ls 效果图](考勤js.png)
 
 * css部分
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/考勤css.png)
+![ls 效果图](考勤css.png)
 
 * 图片部分
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/考勤img.png)
+![ls 效果图](考勤img.png)
 
 * xhr部分
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/考勤xhr.png)
+![ls 效果图](考勤xhr.png)
 
 ## 这里面隐藏的问题
  我将前端开发的问题归结为：工程化 模块化 流程规范化
@@ -154,7 +154,7 @@ lib.css hr.css 和 lib.js hr.js
 同时为使用者提供优雅的使用体验，举个例子，一个简单的tip提示标签，使用者仅需要配置好要提示的信息，而不必去关心这个tip的样式，动画，弹出位置等问题，简化业务开发者的开发难度
 
 ##组件化前端开发
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/组件化前端开发.png)
+![ls 效果图](组件化前端开发.png)
 
 ##组件化开发分工
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201510/hr模块前端优化笔记/组件化开发分工.png)
+![ls 效果图](组件化开发分工.png)

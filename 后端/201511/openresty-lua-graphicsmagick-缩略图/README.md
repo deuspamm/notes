@@ -270,12 +270,12 @@ location /img_crop_service {
 
 效果01
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/openresty lua graphicsmagick 缩略图/样例01.png)
+![ls 效果图](样例01.png)
 
 效果02
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/openresty lua graphicsmagick 缩略图/样例02.png)
+![ls 效果图](样例02.png)
 
 存储路径样例，可以写个脚本删除多少天以内没有访问过的冷数据
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/后端/201511/openresty lua graphicsmagick 缩略图/存储结果.png)
+![ls 效果图](存储结果.png)

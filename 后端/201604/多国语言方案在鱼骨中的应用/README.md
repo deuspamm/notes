@@ -7,10 +7,10 @@
 ## 先看一下总体的效果
 
 * xml的配置
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/多国语言方案在鱼骨中的应用/i18-01.png)
+![ls](i18-01.png)
 
 * 每个模块具体的使用
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/多国语言方案在鱼骨中的应用/i18-02.png)
+![ls](i18-02.png)
 
 ## 具体实现
 

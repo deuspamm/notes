@@ -7,18 +7,18 @@
 
 * 日志
 
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-01.png)
+![ls](img-01.png)
 
 * 简单的用jd-gui查一下源码中的关键字，定位到
 ```java
 triggers = this.qsRsrcs.getJobStore().acquireNextTriggers(now + this.idleWaitTime, Math.min(availThreadCount, this.qsRsrcs.getMaxBatchSize()), this.qsRsrcs.getBatchTimeWindow());
 ```
 
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-02.png)
+![ls](img-02.png)
 
 * 为了搞懂上面这句代码究竟执行了什么，我们在idea中先进入org.quartz.spi.JobStore类，并找到acquireNextTriggers方法，鼠标右键跳转到实现方法，可以从下图中看到这个方法有多个实现。
 
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-03.png)
+![ls](img-03.png)
 
 * 再结合我们的配置文件中知道trigger的信息是存在于数据库中的，所以应该是jdbc的,所以应该选择上图中的 JobStoreSupport
 
@@ -64,9 +64,9 @@ org.quartz.dataSource.myDS.connectionProvider.class = com.yugu.service.utils.Dru
 * 继续往下跟踪，如下面两图所示，找到具体的查询方法是：StdJDBCDelegate中的selectTriggerToAcquire
 
 
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-04.png)
+![ls](img-04.png)
 
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-05.png)
+![ls](img-05.png)
 
 * 已经找到具体的位置了，但我不想把quartz的代码都下载下来，重新编译打包，所以可以自己把这个方法实现一遍，直接复制这段源码，并添加一些日志记录，
 
@@ -219,8 +219,8 @@ public class StdJDBCDelegate extends org.quartz.impl.jdbcjobstore.StdJDBCDelegat
 ```
 
 * 根据配置，进入：org.springframework.scheduling.quartz.SchedulerFactoryBean这个类，找到instanceName关键字，可以知道下面两图中，本来先从配置文件中读到了instanceName然后又用beanid给覆盖了。
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-06.png)
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/quartz整合到spring后不执行任务/img-07.png)
+![ls](img-06.png)
+![ls](img-07.png)
 
 * 找到了原因，最后我们再次修改一下配置文件，程序正常触发job了。
 

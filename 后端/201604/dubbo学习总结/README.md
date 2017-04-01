@@ -18,13 +18,13 @@
 ## 整体简绍
 
 这张图展示了项目的整体结构
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-all.png)
+![ls](dubbo-all.png)
 
 api模块的目录结构(主要是实体，自定异常，接口)
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-api.png)
+![ls](dubbo-api.png)
 
 provider模块的目录结构（接口实现,dao,dao实现,其它）
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-provider.png)
+![ls](dubbo-provider.png)
 
 ##独立部署的关键配置
 
@@ -191,21 +191,21 @@ dubbo.log4j.level=WARN
 >cd bin && ./start.sh
 
 打包后的文件结构
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-gz.png)
+![ls](dubbo-gz.png)
 
 启动，关闭服务
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-gz.png)
+![ls](dubbo-gz.png)
 
 ##集中部署服务：在我们的场景中，我们并不想完全独立的部署服务
 
 首先需要建一个web模块,添加需要启动的provider依懒
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-jersey-pom.png)
+![ls](dubbo-jersey-pom.png)
 
 添加spring的加载扫描规则
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-jersey-provider.png)
+![ls](dubbo-jersey-provider.png)
 
 多个服务集中部署时，可能有多个服务都需要依赖同一个服务的情况，所以消费者统一采用了注解的方式，避免bean id冲突
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/dubbo学习总结/dubbo-customer.png)
+![ls](dubbo-customer.png)
 
  spring-dubbo.xml
 ```xml

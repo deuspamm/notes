@@ -246,13 +246,13 @@ public class LogTest {
 
 
 * 测试效果控制台
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/优化-使用logback来管理日志/console.png)
+![ls](console.png)
 
 * 测试效果info文件
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/优化-使用logback来管理日志/info.png)
+![ls](info.png)
 
 * 测试效果error文件
-![ls](https://github.com/lenxeon/notes/blob/master/后端/201604/优化-使用logback来管理日志/error.png)
+![ls](error.png)
 
 
 5.17日 新增一个功能，将某一个日志点记录到独立的文件中，比如：项目中有一个日志点是记录每一个接口的响应时间的，希望该这个记录单独记录到独立的文件中,假设这个日志点是 monitor

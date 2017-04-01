@@ -45,16 +45,16 @@ this.items = Ext.create('Ext.view.View', {
 ## 实践效果图
 
 * extjs
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/ext-01.png)
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/ext-02.png)
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/ext-03.png)
+![ls 效果图](ext-01.png)
+![ls 效果图](ext-02.png)
+![ls 效果图](ext-03.png)
 
 * react
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/react-01.png)
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/react-02.png)
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/react-03.png)
+![ls 效果图](react-01.png)
+![ls 效果图](react-02.png)
+![ls 效果图](react-03.png)
 
 * fis3
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/fis-01.png)
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/fis-02.png)
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/前端/201604/最近写了一段时间前端的感受extjs react fis3/fis-03.png)
+![ls 效果图](fis-01.png)
+![ls 效果图](fis-02.png)
+![ls 效果图](fis-03.png)

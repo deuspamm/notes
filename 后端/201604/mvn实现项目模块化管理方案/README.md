@@ -13,32 +13,32 @@
 ##先给两张图，看看鱼骨目前的模块化管理
 
 * 整体想法
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/鱼骨服务体系架构.png)
+![ls 查看监控状态](鱼骨服务体系架构.png)
 
 * 项目中的模块化
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/mvn-all.png)
+![ls 查看监控状态](mvn-all.png)
 
 ##如何建出上面的项目
 
 先建一个maven的主项目
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-01.png)
+![ls 查看监控状态](step-01.png)
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-02.png)
+![ls 查看监控状态](step-02.png)
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-03.png)
+![ls 查看监控状态](step-03.png)
 
 添加两个模块，注意打勾和选择的类型
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-04.png)
+![ls 查看监控状态](step-04.png)
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-05.png)
+![ls 查看监控状态](step-05.png)
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-06.png)
+![ls 查看监控状态](step-06.png)
 
 添加一个web的模块，一会儿这个模块要依赖上面两个模块工作
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-07.png)
+![ls 查看监控状态](step-07.png)
 
 全部建完后的样子，同时可以把最外层的src目录给删除了，用不着
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/step-08.png)
+![ls 查看监控状态](step-08.png)
 
 
 ##各个模块的pom如何配置
@@ -232,9 +232,9 @@ public class MyServlet extends HttpServlet {
 
 ##请求效果
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/result-01.png)
+![ls 查看监控状态](result-01.png)
 
-![ls 查看监控状态](https://github.com/lenxeon/notes/blob/master/后端/201604/mvn实现项目模块化管理方案/result-02.png)
+![ls 查看监控状态](result-02.png)
 
 
 ##源码地址
