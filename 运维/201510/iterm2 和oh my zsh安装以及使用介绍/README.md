@@ -6,9 +6,9 @@
 
 iTerm 2 相比自带的 Terminal 应用，有太多优点了。例如，可以设置主题，支持画面分割，各种使用的快捷键，以及快速唤出。
 
-![ls 效果图](https://github.com/lenxeon/notes/blob/master/运维/201510/iterm2 和oh my zsh安装以及使用介绍/iterm2效果图.png)
+![ls 效果图](iterm2效果图.png)
 
-![vim 效果图](https://github.com/lenxeon/notes/blob/master/运维/201510/iterm2 和oh my zsh安装以及使用介绍/iterm2 vim 效果图.png)
+![vim 效果图](iterm2 vim 效果图.png)
 
 ## 安装步骤
 ### 如果你没有Homebrew请先安装Homebrew
@@ -64,7 +64,7 @@ cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 cat ~/.zshrc | grep -v '#'  |  grep -v '^$'
 ```
 
-![~/.oh-my-zsh的模板内容](https://github.com/lenxeon/notes/blob/master/运维/201510/iterm2 和oh my zsh安装以及使用介绍/o-my-zsh默认模板.png)
+![~/.oh-my-zsh的模板内容](o-my-zsh默认模板.png)
 
 ### 在 ~/.zshrc 修改主题为ZSH_THEME="agnoster"，并追加下面的内容
 
@@ -97,11 +97,11 @@ fi
 重新打开一个shell窗口执行ls现在已经有颜色了
 
 ### 关于没有显示光标前的箭头问题是字体的问题,可以去这里[下载](https://github.com/mneorr/powerline-fonts/blob/bfcb152306902c09b62be6e4a5eec7763e46d62d/Monaco/Monaco%20for%20Powerline.otf)然后根据下图设置
-![~/.oh-my-zsh的模板内容](https://github.com/lenxeon/notes/blob/master/运维/201510/iterm2 和oh my zsh安装以及使用介绍/iterm2字体设置.png)
+![~/.oh-my-zsh的模板内容](iterm2字体设置.png)
 
 vim设置上颜色
 
-![ls](https://github.com/lenxeon/notes/blob/master/运维/201510/iterm2 和oh my zsh安装以及使用介绍/vim.png)
+![ls](vim.png)
 
 ```
 mkdir -p ~/.vim/colors/
