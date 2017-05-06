@@ -37,3 +37,4 @@
 * [后端-201606-mac下如何管理多个版本的jdk](https://github.com/lenxeon/notes/tree/master/后端/201606/mac下如何管理多个版本的jdk)
 * [后端-201606-report-ng自动化测试报告自定义](https://github.com/lenxeon/notes/tree/master/后端/201606/report-ng自动化测试报告自定义)
 * [后端-201606-使用zookeeper+config-toolkit管理系统中的配置文件](https://github.com/lenxeon/notes/tree/master/后端/201606/使用zookeeper+config-toolkit管理系统中的配置文件)
+* [后端-201705-程序员如何优雅地使用您的mac](https://github.com/lenxeon/notes/tree/master/后端/201705/程序员如何优雅地使用您的mac)
