@@ -1,0 +1,12 @@
+gm convert ./jenkins-credentials.png -quality 75 -depth 8 -colors 75 ./out/jenkins-credentials.jpg
+gm convert ./jenkins-gitlab-webhook.png -quality 75 -depth 8 -colors 75 ./out/jenkins-gitlab-webhook.jpg
+gm convert ./jenkins-project-config-02.png -quality 75 -depth 8 -colors 75 ./out/jenkins-project-config-02.jpg
+gm convert ./jenkins-project-config.png -quality 75 -depth 8 -colors 75 ./out/jenkins-project-config.jpg
+gm convert ./jenkins-project.png -quality 75 -depth 8 -colors 75 ./out/jenkins-project.jpg
+gm convert ./jenkins-projects.png -quality 75 -depth 8 -colors 75 ./out/jenkins-projects.jpg
+gm convert ./jenkins-report-listener.png -quality 75 -depth 8 -colors 75 ./out/jenkins-report-listener.jpg
+gm convert ./jenkins-report-ng.png -quality 75 -depth 8 -colors 75 ./out/jenkins-report-ng.jpg
+gm convert ./jenkins-reports-overview.png -quality 75 -depth 8 -colors 75 ./out/jenkins-reports-overview.jpg
+gm convert ./jenkins-reports.png -quality 75 -depth 8 -colors 75 ./out/jenkins-reports.jpg
+gm convert ./jenkins-yugu-reports.png -quality 75 -depth 8 -colors 75 ./out/jenkins-yugu-reports.jpg
+gm convert ./jira-issuses-filter.png -quality 75 -depth 8 -colors 75 ./out/jira-issuses-filter.jpg
